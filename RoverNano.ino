@@ -1,3 +1,8 @@
+#include <Servo.h>
+
+Servo servo1;
+Servo servo2;
+
 int APWM = 6;
 int A1Out = 7;
 int A2Out = 4;
@@ -23,6 +28,8 @@ Motor cMS = { 0x00, 0x00, 0x00, 0x00 };
 Motor nMS = { 0x00, 0x00, 0x00, 0x00 };
 
 void setup() {
+  servo1.attach(9);
+  servo2.attach(10);
   initMotors();
   Serial.begin(9600);
 }
@@ -44,11 +51,18 @@ void HandleCommand() {
       HandleMotorsCommand();
       break;
     case servoCommandId:
-      Serial.println("servo command");
+      HandleServoCommand();
       break;
     default:
       Serial.println("Unknown command");
   }
+}
+
+void HandleServoCommand() {
+  byte servo1Position = Serial.read();
+  byte servo2Position = Serial.read();
+  servo1.write(servo1Position);
+  servo2.write(servo2Position);
 }
 
 void HandleMotorsCommand() {
@@ -118,44 +132,4 @@ void initMotors() {
 
   digitalWrite(B1Out, 1);
   digitalWrite(B2Out, 0);
-}
-
-void driveMotor() {
-
-  //  digitalWrite(A1Out, !digitalRead(A1Out));
-  //  digitalWrite(A2Out, !digitalRead(A2Out));
-  //
-  //  digitalWrite(B1Out, !digitalRead(B1Out));
-  //  digitalWrite(B2Out, !digitalRead(B2Out));
-
-  for (int i = 100; i < 200; i++) {
-    analogWrite(APWM, i);
-    analogWrite(BPWM, i);
-    delay(100);
-  }
-}
-
-void xxx() {
-  //  analogWrite(APWM, 125);
-  //  analogWrite(BPWM, 125);
-  //  digitalWrite(A1Out, LOW);
-  //  digitalWrite(A2Out, HIGH);
-  //  digitalWrite(B1Out, LOW);
-  //  digitalWrite(B2Out, HIGH);
-  //  delay(2000);
-  //  digitalWrite(A1Out, LOW);
-  //  digitalWrite(A2Out, LOW);
-  //  digitalWrite(B1Out, LOW);
-  //  digitalWrite(B2Out, LOW);
-  //  delay(1000);
-  //  digitalWrite(A1Out, HIGH);
-  //  digitalWrite(A2Out, LOW);
-  //  digitalWrite(B1Out, HIGH);
-  //  digitalWrite(B2Out, LOW);
-  //  delay(2000);
-  //  digitalWrite(A1Out, LOW);
-  //  digitalWrite(A2Out, LOW);
-  //  digitalWrite(B1Out, LOW);
-  //  digitalWrite(B2Out, LOW);
-  //  delay(1000);
 }
